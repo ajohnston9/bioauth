@@ -16,11 +16,11 @@ public class WearableService extends WearableListenerService {
 
 
     private static final String TAG = "WearableService";
+    private static final String START_TRAINING = "/start-training";
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equals("/Hello_World")) {
-            //Fire an activity just so we can see if it works
+        if (messageEvent.getPath().equals(START_TRAINING)) {
             Intent i = new Intent(getBaseContext(), MainWearActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getApplication().startActivity(i);

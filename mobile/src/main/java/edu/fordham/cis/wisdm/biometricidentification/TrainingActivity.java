@@ -1,6 +1,8 @@
 package edu.fordham.cis.wisdm.biometricidentification;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,8 +28,11 @@ public class TrainingActivity extends Activity {
     private EditText mEmail;
     private GoogleApiClient mGoogleApiClient;
     private boolean runTraining = false;
+    private ScreenLockReceiver mReceiver;
 
     private static final String TAG = "TrainingActivity";
+
+    private static final String START_TRAINING = "/start-training";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,21 @@ public class TrainingActivity extends Activity {
                 .build();
         mGoogleApiClient.connect();
 
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mReceiver = new ScreenLockReceiver();
+        registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        if (ScreenLockReceiver.wasScreenOn && runTraining) {
+            Worker worker = new Worker();
+            runTraining = false; //make sure it doesn't run again
+            new Thread(worker).start();
+        }
+        unregisterReceiver(mReceiver);
+        super.onPause();
     }
 
 
@@ -110,7 +130,7 @@ public class TrainingActivity extends Activity {
                 MessageApi.SendMessageResult result;
                 Log.d(TAG, "Got here.");
                 result= Wearable.MessageApi.sendMessage(
-                        mGoogleApiClient, node.getId(), "/Hello_World", null).await();
+                        mGoogleApiClient, node.getId(), START_TRAINING, null).await();
                 Log.d(TAG, "Sent to node: " + node.getId() + " with display name: " + node.getDisplayName());
                 if (!result.getStatus().isSuccess()) {
                     Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());

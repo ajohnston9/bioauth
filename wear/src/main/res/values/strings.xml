@@ -5,5 +5,8 @@
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
     <string name="prompt">Please walk unhindered until the watch vibrates</string>
+    <string name="title_activity_wear_training">Training</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
