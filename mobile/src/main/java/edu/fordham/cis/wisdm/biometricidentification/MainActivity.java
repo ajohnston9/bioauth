@@ -27,35 +27,12 @@ public class MainActivity extends Activity {
     static final int AUTH_MODE     = 1;
     static final String TAG = "MainActivity_Phone";
 
-    public static GoogleApiClient mGoogleApiClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mTrainingButton       = (Button) findViewById(R.id.trainingButton);
         mAuthenticationButton = (Button) findViewById(R.id.authenticationButton);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(Bundle bundle) {
-                        Log.d(TAG, "Connected to wearable.");
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        Log.d(TAG, "Connection to wearable suspended. Code: " + i);
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Log.d(TAG, "Fuck! Connection failed: " + connectionResult);
-                    }
-                })
-                .addApi(Wearable.API)
-                .build();
-        mGoogleApiClient.connect(); //Aww yeah should be running now
         mTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,24 +80,4 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    class Worker implements Runnable {
-
-        @Override
-        public void run() {
-            NodeApi.GetConnectedNodesResult nodes =
-                    Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-            for (Node node : nodes.getNodes()) {
-                MessageApi.SendMessageResult result;
-                Log.d(TAG, "Got here.");
-                result= Wearable.MessageApi.sendMessage(
-                        mGoogleApiClient, node.getId(), "/Hello_World", null).await();
-                Log.d(TAG, "Sent to node: " + node.getId() + " with display name: " + node.getDisplayName());
-                if (!result.getStatus().isSuccess()) {
-                    Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
-                } else {
-                    Log.d(TAG, "Message Successfully sent.");
-                }
-            }
-        }
-    }
 }
