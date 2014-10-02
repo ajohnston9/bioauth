@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Biometric Authentication</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_training">Training Mode</string>
+    <string name="prompt">Please select from a choice below: </string>
+    <string name="train">Training Mode</string>
+    <string name="auth">Authentication Mode</string>
+    <string name="title_activity_auth">Authentication</string>
+    <string name="name">Name: </string>
+    <string name="email">Email: </string>
+    <string name="training_prompt">Please enter in the following details to be added to the system: </string>
+    <string name="watch_prompt">Once you have completed the fields above, please press "Begin", place your phone in your pocket, and walk unhindered until your smartwatch vibrates.</string>
+    <string name="begin">Begin</string>
+    <string name="reset">Reset</string>
+</resources>
