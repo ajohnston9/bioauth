@@ -23,7 +23,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * This activity handles the monitoring of user data and the transmission back up to the server
+ *
+ * @author Andrew H. Johnston
+ * @version 0.01ALPHA
+ */
 public class WearTrainingActivity extends Activity implements SensorEventListener {
 
     private SensorManager mSensorManager;

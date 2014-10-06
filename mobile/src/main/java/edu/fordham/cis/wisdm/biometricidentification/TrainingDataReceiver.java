@@ -9,7 +9,11 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.util.ArrayList;
 
 /**
- * Created by andrew on 10/6/14.
+ * The TrainingDataReceiver class takes the data sent from the watch and hands it off to
+ * the training activity to be packaged up and sent to the server
+ *
+ * @author Andrew H. Johnston
+ * @version 0.01ALPHA
  */
 public class TrainingDataReceiver extends WearableListenerService  {
 
@@ -32,7 +36,7 @@ public class TrainingDataReceiver extends WearableListenerService  {
         if (event.getPath().equals(PATH)) {
             byte[] bRecs = event.getData();
             //The data comes in as an ArrayList<AccelerationRecord>, so reinflate it
-            
+
         }
     }
 

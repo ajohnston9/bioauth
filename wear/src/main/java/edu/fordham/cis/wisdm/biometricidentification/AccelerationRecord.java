@@ -4,7 +4,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Created by andrew on 10/2/14.
+ * This class acts as a bin for acceleration records and allows for easy serialization of the data
+ * @author Andrew H. Johnston
+ * @verison 0.01ALPHA
  */
 public class AccelerationRecord implements Serializable{
 
