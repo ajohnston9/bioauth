@@ -7,12 +7,15 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class WearTrainingActivity extends Activity implements SensorEventListener {
@@ -22,14 +25,22 @@ public class WearTrainingActivity extends Activity implements SensorEventListene
 
     private ArrayList<AccelerationRecord> mAccelerationRecords = new ArrayList<AccelerationRecord>();
 
+    private AtomicBoolean shouldCollect = new AtomicBoolean(false);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wear_training);
+        //Easy way to keep watch from sleeping on me
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        CollectTask t = new CollectTask();
+        Timer timer = new Timer();
+        timer.schedule(t, 60*1000*2); //Wait two minutes then run
+        shouldCollect.set(true);
     }
 
     @Override
@@ -65,15 +76,26 @@ public class WearTrainingActivity extends Activity implements SensorEventListene
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d("WearTrainingActivity","Running sensor collection...");
-        long timestamp = Calendar.getInstance().getTimeInMillis();
-        mAccelerationRecords.add(
-                new AccelerationRecord(event.values[0], event.values[1], event.values[2], timestamp)
-        );
+        if (shouldCollect.get()) {
+            long timestamp = Calendar.getInstance().getTimeInMillis();
+            mAccelerationRecords.add(
+                    new AccelerationRecord(event.values[0], event.values[1], event.values[2], timestamp)
+            );
+        }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //Not used but must be overridden
+    }
+
+    class CollectTask extends TimerTask {
+
+        @Override
+        public void run() {
+            shouldCollect.set(false);
+            //TODO: Send AccelerationRecord back to the phone
+            //TODO: Close the window
+        }
     }
 }
