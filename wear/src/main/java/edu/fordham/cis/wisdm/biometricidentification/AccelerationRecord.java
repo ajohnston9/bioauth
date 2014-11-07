@@ -1,5 +1,7 @@
 package edu.fordham.cis.wisdm.biometricidentification;
 
+import android.util.Log;
+
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
@@ -44,7 +46,7 @@ public class AccelerationRecord implements Serializable{
         try {
             outputStream.defaultWriteObject();
         } catch (Exception e) {
-
+            Log.wtf("AccelerationRecord", e.getMessage());
         }
     }
 

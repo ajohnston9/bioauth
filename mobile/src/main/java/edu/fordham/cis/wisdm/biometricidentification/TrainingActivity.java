@@ -84,6 +84,10 @@ public class TrainingActivity extends Activity {
 
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
+        Intent service = new Intent(this, TrainingDataReceiver.class);
+        startService(service);
+
         mReceiver = new ScreenLockReceiver();
         registerReceiver(mReceiver, intentFilter);
     }

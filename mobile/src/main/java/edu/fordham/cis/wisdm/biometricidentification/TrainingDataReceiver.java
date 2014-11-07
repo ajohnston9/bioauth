@@ -1,11 +1,15 @@
 package edu.fordham.cis.wisdm.biometricidentification;
 
 import android.os.PowerManager;
+import android.os.Vibrator;
+import android.util.Log;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 /**
@@ -17,27 +21,45 @@ import java.util.ArrayList;
  */
 public class TrainingDataReceiver extends WearableListenerService  {
 
-    private GoogleApiClient               mGoogleApiClient;
     private PowerManager.WakeLock         mWakeLock;
-    private ArrayList<AccelerationRecord> mAccelerationRecords = new ArrayList<>();
+    private ArrayList<AccelerationRecord> mAccelerationRecords = new ArrayList<AccelerationRecord>();
 
     private final static String TAG = "TrainingDataReceiver";
-    private final static String PATH = "/training-data";
 
-    public TrainingDataReceiver() {
+    public static String name;
+    public static String email;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock                 = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         mWakeLock.acquire();
+        Log.wtf(TAG, "Service Started");
     }
 
-    @Override
-    public void onMessageReceived(MessageEvent event) {
-        //Ensure that the message is actually the training data
-        if (event.getPath().equals(PATH)) {
-            byte[] bRecs = event.getData();
-            //The data comes in as an ArrayList<AccelerationRecord>, so reinflate it
 
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        try {
+            for (DataEvent event : dataEvents) {
+                byte[] data = event.getDataItem().getData();
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                mAccelerationRecords = (ArrayList<AccelerationRecord>) objectInputStream.readObject();
+                Log.wtf(TAG, "Records is of size: " + mAccelerationRecords.size());
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(500l); //Vibrate for half a second
+            }
+        } catch (Exception e) {
+            Log.wtf(TAG, "Something happened: " +e.getClass().getName() + ": " +e.getMessage());
+        } finally {
+            mWakeLock.release();
         }
+    }
+
+    private void writeToFile() {
+
     }
 
 }

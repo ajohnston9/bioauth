@@ -1,16 +1,15 @@
 package edu.fordham.cis.wisdm.biometricidentification;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
 /**
- * Class Description Here.
- * Created on 9/30/14.
- *
+ * Listens on the Wearable for the signal to start training and accordingly starts the training process
  * @author Andrew Johnston
- * @version 0.01
+ * @version 0.01ALPHA
  */
 public class WearableService extends WearableListenerService {
 
@@ -20,8 +19,9 @@ public class WearableService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
+        Log.d(TAG, "Message received for path " + messageEvent.getPath());
         if (messageEvent.getPath().equals(START_TRAINING)) {
-            Intent i = new Intent(getBaseContext(), MainWearActivity.class);
+            Intent i = new Intent(getBaseContext(), WearTrainingActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getApplication().startActivity(i);
         }

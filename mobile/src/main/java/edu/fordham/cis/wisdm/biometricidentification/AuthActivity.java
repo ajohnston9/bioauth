@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+/**
+ * Handles the authentication of a user by email and gait analytics
+ * @author Andrew H. Johnston
+ * @version 0.01ALPHA
+ */
 public class AuthActivity extends Activity {
 
     @Override

@@ -5,6 +5,13 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
+/**
+ * This is the main activity of the application. Seeing as the application is launched via
+ * the phone, the MainActivity will not do much.
+ *
+ * @author Andrew H. Johnston
+ * @version 0.01ALPHA
+ */
 public class MainWearActivity extends Activity {
 
     private TextView mTextView;
